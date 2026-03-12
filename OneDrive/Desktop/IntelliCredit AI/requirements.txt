@@ -1,0 +1,10 @@
+streamlit
+pdfplumber
+PyPDF2
+pytesseract
+pillow
+pandas
+matplotlib
+spacy
+textblob
+numpy

@@ -1,0 +1,519 @@
+/* =====================================================
+   IntelliCredit AI — Premium Dark Theme (v2)
+   Fixes: right-side overlap, white theme, 3D + animations
+   ===================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/* ── Keyframes ─────────────────────────────────────── */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.2), 0 8px 32px rgba(0,0,0,0.4); }
+    50%       { box-shadow: 0 0 40px rgba(56, 189, 248, 0.45), 0 8px 32px rgba(0,0,0,0.4); }
+}
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+}
+@keyframes rotateOrbit {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+@keyframes floatCard {
+    0%, 100% { transform: translateY(0px); }
+    50%       { transform: translateY(-6px); }
+}
+@keyframes borderGlow {
+    0%, 100% { border-color: rgba(56, 189, 248, 0.15); }
+    50%       { border-color: rgba(129, 140, 248, 0.5); }
+}
+@keyframes scoreCounter {
+    from { transform: scale(0.5); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+}
+@keyframes float3D {
+    0%, 100% { transform: translateY(0px) rotateX(0deg) rotateY(0deg); }
+    25% { transform: translateY(-12px) rotateX(2deg) rotateY(-1deg); }
+    50% { transform: translateY(-20px) rotateX(0deg) rotateY(2deg); }
+    75% { transform: translateY(-12px) rotateX(-2deg) rotateY(-2deg); }
+}
+@keyframes neon-glow {
+    0%, 100% { text-shadow: 0 0 10px rgba(56,189,248,0.5), 0 0 20px rgba(168,85,247,0.3); }
+    50% { text-shadow: 0 0 20px rgba(56,189,248,0.8), 0 0 40px rgba(168,85,247,0.6); }
+}
+@keyframes swipe-in {
+    from { transform: translateX(-100%) skewX(20deg); opacity: 0; }
+    to { transform: translateX(0) skewX(0deg); opacity: 1; }
+}
+@keyframes pulse-scale {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+@keyframes gradient-shift-fast {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ── Global Reset & Typography ─────────────────────── */
+html, body, [class*="st-"] {
+    font-family: 'Inter', 'Space Grotesk', sans-serif !important;
+    color: #e2e8f0 !important;
+}
+
+/* ── CRITICAL: Fix Streamlit right-side overlap ─────── */
+/* Hide the annoying hamburger/3-dot deploy menu that breaks layout */
+#MainMenu                                      { visibility: hidden !important; }
+header[data-testid="stHeader"]                 { background: transparent !important; z-index: 1 !important; }
+.stDeployButton                                { display: none !important; }
+footer                                         { visibility: hidden !important; }
+/* Push the top-right Streamlit controls down so they don't overlap content */
+div[data-testid="stToolbar"]                   { right: 0; top: 0; z-index: 0 !important; visibility: hidden !important; }
+
+/* ── App Background — animated starfield ───────────── */
+.stApp {
+    background: linear-gradient(135deg, #060811 0%, #0d1117 40%, #0f172a 70%, #0a0f1e 100%) !important;
+    background-size: 400% 400%;
+    animation: gradientShift 12s ease infinite;
+    min-height: 100vh;
+}
+@keyframes gradientShift {
+    0%   { background-position: 0%   50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0%   50%; }
+}
+
+/* Floating particles pseudo-layer via main block */
+.main .block-container {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+    max-width: 1200px;
+    animation: fadeInUp 0.6s ease forwards;
+}
+
+/* ── Glassmorphism Cards ───────────────────────────── */
+.glass-card {
+    background: linear-gradient(
+        135deg,
+        rgba(30, 41, 59, 0.55) 0%,
+        rgba(15, 23, 42, 0.45) 100%
+    );
+    backdrop-filter: blur(18px) saturate(180%);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+        0 0 60px rgba(56, 189, 248, 0.05);
+    transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease forwards, borderGlow 4s ease-in-out infinite;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+    will-change: transform, box-shadow;
+}
+
+/* Enhanced 3D depth layer */
+.glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 30% 30%,
+        rgba(56, 189, 248, 0.08) 0%,
+        transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+    border-radius: 20px;
+}
+
+.glass-card > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* Shiny top-edge highlight */
+.glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.6), transparent);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 3;
+}
+
+.glass-card:hover {
+    transform: translateY(-12px) rotateX(4deg) rotateY(2deg) scale(1.02);
+    box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.7),
+        0 0 50px rgba(56, 189, 248, 0.25),
+        0 0 100px rgba(168, 85, 247, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    border-color: rgba(56, 189, 248, 0.5);
+}
+.glass-card:hover::before {
+    opacity: 1;
+}
+
+/* ── Metric card ────────────────────────────────────── */
+.metric-title {
+    color: #94a3b8;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 10px;
+}
+
+.metric-value {
+    font-size: 34px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a855f7 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 3s linear infinite, pulse-scale 2s ease-in-out infinite;
+    letter-spacing: -0.3px;
+}
+
+/* ── Section Header / Title ─────────────────────────── */
+.header-title {
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #a855f7 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    font-family: 'Space Grotesk', sans-serif !important;
+    animation: shimmer 4s linear infinite, neon-glow 3s ease-in-out infinite;
+    letter-spacing: -0.5px;
+}
+
+/* ── Streamlit Button ──────────────────────────────── */
+.stButton > button {
+    background: linear-gradient(135deg, #0ea5e9, #6366f1, #a855f7) !important;
+    background-size: 200% auto !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 14px 28px !important;
+    font-weight: 700 !important;
+    font-size: 15px !important;
+    letter-spacing: 0.5px !important;
+    box-shadow:
+        0 4px 20px rgba(99, 102, 241, 0.4),
+        0 0 30px rgba(56, 189, 248, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+    position: relative !important;
+    overflow: hidden !important;
+    transform-style: preserve-3d !important;
+    perspective: 1000px !important;
+}
+.stButton > button::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.stButton > button:hover {
+    transform: translateY(-4px) scale(1.04) rotateX(2deg) !important;
+    background-position: right center !important;
+    box-shadow:
+        0 12px 40px rgba(99, 102, 241, 0.7),
+        0 0 40px rgba(14, 165, 233, 0.5),
+        0 0 80px rgba(168, 85, 247, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+.stButton > button:hover::after { opacity: 1 !important; }
+.stButton > button:active {
+    transform: translateY(-1px) scale(0.97) !important;
+}
+
+/* ── File Uploader ─────────────────────────────────── */
+.stFileUploader {
+    background: rgba(30, 41, 59, 0.25) !important;
+    border: 2px dashed rgba(56, 189, 248, 0.35) !important;
+    border-radius: 14px !important;
+    padding: 8px !important;
+    transition: all 0.3s ease !important;
+}
+.stFileUploader:hover {
+    border-color: rgba(129, 140, 248, 0.6) !important;
+    background: rgba(30, 41, 59, 0.4) !important;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.1) !important;
+}
+
+/* ── Progress Bar ──────────────────────────────────── */
+.stProgress > div > div > div > div {
+    background: linear-gradient(90deg, #10b981, #38bdf8, #6366f1) !important;
+    background-size: 200% auto;
+    animation: shimmer 2s linear infinite;
+}
+
+/* ── Sidebar ───────────────────────────────────────── */
+[data-testid="stSidebar"] {
+    background: linear-gradient(180deg,
+        rgba(9, 11, 20, 0.98) 0%,
+        rgba(13, 17, 30, 0.98) 100%
+    ) !important;
+    border-right: 1px solid rgba(56, 189, 248, 0.12) !important;
+    box-shadow: 4px 0 30px rgba(0,0,0,0.5) !important;
+}
+[data-testid="stSidebar"] > div:first-child {
+    padding-top: 2rem;
+}
+/* Sidebar nav items */
+[data-testid="stSidebar"] label {
+    color: #94a3b8 !important;
+    font-weight: 500 !important;
+    transition: color 0.3s ease !important;
+}
+[data-testid="stSidebar"] label:hover {
+    color: #38bdf8 !important;
+}
+
+/* ── Tabs ──────────────────────────────────────────── */
+.stTabs [data-baseweb="tab-list"] {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border-radius: 14px;
+    padding: 4px;
+    gap: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+}
+.stTabs [data-baseweb="tab"] {
+    color: #64748b !important;
+    border-radius: 10px !important;
+    transition: all 0.3s ease !important;
+    font-weight: 500 !important;
+}
+.stTabs [data-baseweb="tab"]:hover {
+    color: #cbd5e1 !important;
+    background: rgba(56, 189, 248, 0.08) !important;
+}
+.stTabs [data-baseweb="tab"][aria-selected="true"] {
+    color: #f8fafc !important;
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2)) !important;
+    box-shadow: 0 2px 12px rgba(56, 189, 248, 0.2) !important;
+}
+
+/* ── Inputs / Text Fields ──────────────────────────── */
+.stTextInput > div > div > input,
+.stTextArea > div > div > textarea {
+    background: rgba(15, 23, 42, 0.7) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    color: #e2e8f0 !important;
+    font-family: 'Inter', sans-serif !important;
+    transition: all 0.3s ease !important;
+}
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: rgba(56, 189, 248, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12) !important;
+}
+
+/* ── Spinner ───────────────────────────────────────── */
+.stSpinner > div {
+    border-top-color: #38bdf8 !important;
+}
+
+/* ── Success / Warning / Error / Info Alerts ───────── */
+.stAlert { border-radius: 12px !important; }
+
+/* ── Floating 3D orbit ring on hero/login area ───────── */
+.orbit-ring {
+    position: absolute;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 2px solid rgba(56, 189, 248, 0.2);
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    animation: rotateOrbit 8s linear infinite;
+    pointer-events: none;
+}
+
+/* ── Login Container ───────────────────────────────── */
+.login-container {
+    max-width: 420px;
+    margin: 8vh auto;
+    text-align: center;
+}
+
+/* ── LIGHT THEME OVERRIDES ─────────────────────────── */
+/* When Streamlit is set to "Light" mode */
+[data-theme="light"] .stApp,
+.stApp[data-theme="light"] {
+    background: linear-gradient(135deg, #f0f4ff 0%, #e8eeff 50%, #f5f0ff 100%) !important;
+}
+[data-theme="light"] html,
+[data-theme="light"] body,
+[data-theme="light"] [class*="st-"] {
+    color: #1e293b !important;
+}
+[data-theme="light"] .glass-card {
+    background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.75) 0%,
+        rgba(240, 244, 255, 0.65) 100%
+    ) !important;
+    border: 1px solid rgba(99, 102, 241, 0.18) !important;
+    box-shadow:
+        0 8px 32px rgba(99, 102, 241, 0.12),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+[data-theme="light"] .glass-card:hover {
+    box-shadow:
+        0 20px 60px rgba(99, 102, 241, 0.22),
+        0 0 30px rgba(56, 189, 248, 0.15) !important;
+}
+[data-theme="light"] [data-testid="stSidebar"] {
+    background: linear-gradient(180deg,
+        rgba(240, 244, 255, 0.98) 0%,
+        rgba(230, 234, 255, 0.98) 100%
+    ) !important;
+    border-right: 1px solid rgba(99, 102, 241, 0.18) !important;
+}
+[data-theme="light"] .metric-title {
+    color: #475569 !important;
+}
+[data-theme="light"] .stFileUploader {
+    background: rgba(240, 244, 255, 0.5) !important;
+    border-color: rgba(99, 102, 241, 0.35) !important;
+}
+[data-theme="light"] .stTabs [data-baseweb="tab-list"] {
+    background: rgba(240, 244, 255, 0.8) !important;
+    border-color: rgba(99, 102, 241, 0.15) !important;
+}
+[data-theme="light"] .stTextInput > div > div > input,
+[data-theme="light"] .stTextArea > div > div > textarea {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(99, 102, 241, 0.25) !important;
+    color: #1e293b !important;
+}
+
+/* ── Scrollbar ─────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.3); }
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #38bdf8, #6366f1);
+    border-radius: 3px;
+}
+
+/* ── Floating animation for cards in columns ─────────── */
+div[data-testid="column"]:nth-child(1) .glass-card { animation-delay: 0.0s; }
+div[data-testid="column"]:nth-child(2) .glass-card { animation-delay: 0.1s; }
+div[data-testid="column"]:nth-child(3) .glass-card { animation-delay: 0.2s; }
+
+/* ── 3D tilt utility for hover (applied via JS) ──────── */
+.tilt-3d {
+    transform-style: preserve-3d;
+    perspective: 800px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.tilt-3d:hover {
+    transform: rotateX(6deg) rotateY(-4deg) translateZ(12px) scale(1.02);
+    filter: drop-shadow(0 15px 35px rgba(56, 189, 248, 0.2));
+}
+
+/* ── Score pulse ring ────────────────────────────────── */
+.score-ring {
+    animation: scoreCounter 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards,
+               glow-pulse 3s ease-in-out infinite 0.8s;
+}
+
+/* ── Divider glow ────────────────────────────────────── */
+hr {
+    border: none !important;
+    height: 1px !important;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.4), rgba(129,140,248,0.4), transparent) !important;
+    margin: 1rem 0 !important;
+}
+
+/* ── Premium 3D Container Effects ──────────────────── */
+.glass-card[style*="padding: 40px 20px"] {
+    animation: float3D 6s ease-in-out infinite;
+}
+
+/* Enhanced text input 3D look */
+.stTextInput > div > div > input:focus,
+.stTextArea > div > div > textarea:focus {
+    border-color: rgba(56, 189, 248, 0.6) !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12),
+                0 0 30px rgba(56, 189, 248, 0.2),
+                inset 0 0 15px rgba(56, 189, 248, 0.05) !important;
+    transform: scale(1.01) !important;
+    transition: all 0.3s ease !important;
+}
+
+/* Floating animations for different delays */
+.main > div:nth-child(1) { animation-delay: 0s; }
+.main > div:nth-child(2) { animation-delay: 0.1s; }
+.main > div:nth-child(3) { animation-delay: 0.2s; }
+.main > div:nth-child(4) { animation-delay: 0.3s; }
+
+/* Enhanced Radio/Checkbox styling */
+[data-testid="stRadio"] label,
+[data-testid="stCheckbox"] label {
+    transition: all 0.3s ease !important;
+}
+
+[data-testid="stRadio"] label:hover,
+[data-testid="stCheckbox"] label:hover {
+    color: #38bdf8 !important;
+    text-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important;
+}
+
+/* Premium success message styling */
+.stSuccess {
+    animation: swipe-in 0.5s ease forwards !important;
+    background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(56,189,248,0.1)) !important;
+    border: 1px solid rgba(16,185,129,0.4) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Premium error message styling */
+.stError {
+    animation: swipe-in 0.5s ease forwards !important;
+    background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(168,85,247,0.1)) !important;
+    border: 1px solid rgba(239,68,68,0.4) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Premium info message styling */
+.stInfo {
+    animation: swipe-in 0.5s ease forwards !important;
+    background: linear-gradient(135deg, rgba(56,189,248,0.15), rgba(99,102,241,0.1)) !important;
+    border: 1px solid rgba(56,189,248,0.4) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+/* Premium warning message styling */
+.stWarning {
+    animation: swipe-in 0.5s ease forwards !important;
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(56,189,248,0.1)) !important;
+    border: 1px solid rgba(245,158,11,0.4) !important;
+    border-radius: 12px !important;
+    backdrop-filter: blur(10px) !important;
+}
