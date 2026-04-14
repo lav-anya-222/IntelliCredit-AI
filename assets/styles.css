@@ -4,6 +4,7 @@
    ===================================================== */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 /* ── Keyframes ─────────────────────────────────────── */
 @keyframes fadeInUp {
@@ -78,6 +79,25 @@ footer                                         { visibility: hidden !important; 
 div[data-testid="stToolbar"]                   { right: 0; top: 0; z-index: 0 !important; visibility: hidden !important; }
 
 /* ── App Background — animated starfield ───────────── */
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp,
+.material-icons-two-tone {
+    font-family: 'Material Icons' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    letter-spacing: normal;
+    word-wrap: normal;
+    white-space: nowrap;
+    direction: ltr;
+    -webkit-font-feature-settings: 'liga';
+    -webkit-font-smoothing: antialiased;
+}
 .stApp {
     background: linear-gradient(135deg, #060811 0%, #0d1117 40%, #0f172a 70%, #0a0f1e 100%) !important;
     background-size: 400% 400%;
